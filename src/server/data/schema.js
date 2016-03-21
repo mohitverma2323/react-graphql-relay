@@ -1,4 +1,5 @@
-import { GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLList } from 'graphql';
+import { GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLID, GraphQLNonNull } from 'graphql';
+import { connectionDefinitions, connectionArgs, connectionFromPromisedArray } from 'graphql-relay';
 import { COLLECTOION_NAME } from '../../Constants';
 
 /**
@@ -15,6 +16,10 @@ module.exports = (db) => {
   let CustomGraphQLStoryType = new GraphQLObjectType({
     name: 'Story',
     fields: () => ({
+      id: {
+        type: new GraphQLNonNull(GraphQLID),
+        resolve: (object) => object._id
+      },
       _id: { type: GraphQLString },
       author: { type: GraphQLString },
       title: { type: GraphQLString },
@@ -25,12 +30,18 @@ module.exports = (db) => {
     })
   });
 
+  let CustomGraphQLStoryConnection = connectionDefinitions({
+    name: 'Story',
+    nodeType: CustomGraphQLStoryType
+  });
+
   let CustomGraphQLStoreType = new GraphQLObjectType({
     name: 'Store',
     fields: () => ({
-      stories: {
-        type: new GraphQLList(CustomGraphQLStoryType),
-        resolve: () => db.collection(COLLECTOION_NAME).find({}).toArray()
+      storyConnection: {
+        type: CustomGraphQLStoryConnection.connectionType,
+        args: connectionArgs,
+        resolve: (_, args) => connectionFromPromisedArray(db.collection(COLLECTOION_NAME).find({}).toArray(), args)
       }
     })
   });
