@@ -1,5 +1,18 @@
-import { GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLID, GraphQLNonNull } from 'graphql';
-import { connectionDefinitions, connectionArgs, connectionFromPromisedArray } from 'graphql-relay';
+import {
+  GraphQLSchema,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLList,
+  GraphQLID,
+  GraphQLNonNull
+} from 'graphql';
+
+import {
+  connectionDefinitions,
+  connectionArgs,
+  connectionFromPromisedArray
+} from 'graphql-relay';
+
 import { COLLECTOION_NAME } from '../../Constants';
 
 /**
@@ -16,11 +29,11 @@ module.exports = (db) => {
   let CustomGraphQLStoryType = new GraphQLObjectType({
     name: 'Story',
     fields: () => ({
+      // id required by relay (just a wrapper around mongodb's _id)
       id: {
         type: new GraphQLNonNull(GraphQLID),
         resolve: (object) => object._id
       },
-      _id: { type: GraphQLString },
       author: { type: GraphQLString },
       title: { type: GraphQLString },
       duration: { type: GraphQLString },
