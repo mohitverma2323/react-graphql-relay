@@ -243,7 +243,7 @@ module.exports = {
     // These rules are purely matters of style and are quite subjective.
     //
     // this option sets a specific tab width for your code (off by default)
-    indent: [ 1, 2 ],
+    indent: [ 1, 2, { "SwitchCase": 1 } ],
     // enforce one true brace style (off by default)
     'brace-style': 1,
     // require camel case names

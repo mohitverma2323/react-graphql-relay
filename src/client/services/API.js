@@ -4,8 +4,16 @@ import ServerActions from '../actions/ServerActions';
 
 export default class API {
   getLinks() {
-    console.log('api');
-    post(GRPAHQL, { query: '{ links { _id, name, desc } }' }).done(response => {
+    post(GRPAHQL, {
+      query:
+      `{
+        links {
+          _id,
+          story,
+          author
+        }
+      }`
+    }).done(response => {
       new ServerActions().recieveLinks(response.data.links);
     });
   }

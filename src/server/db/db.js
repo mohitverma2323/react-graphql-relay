@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const MONGO_URL = '';
+const MONGO_URL = 'mongodb://shinigami:shinigami@ds019708.mlab.com:19708/ddrgrappdb';
 
 /**
  * This class takes care of the connection to the database.
@@ -17,16 +17,12 @@ export default class DatabaseOperations {
    * @param  {Function} callback [the callback which will be called after the call to the db]
    * @return {null}            [null]
    */
-  getConnection(callback) {
+  async getConnection() {
     if (this.db) {
-      callback(null, this.db);
+      return this.db;
     }
-    MongoClient.connect(MONGO_URL, (error, database) => {
-      if (error) {
-        callback(error);
-      }
-      this.db = database;
-      callback(null, database);
-    });
+
+    let db = await MongoClient.connect(MONGO_URL);
+    return db;
   }
 }

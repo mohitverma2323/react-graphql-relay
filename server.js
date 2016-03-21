@@ -1,27 +1,38 @@
+import fs from 'fs';
 import express from 'express';
-import schema from './src/server/data/schema';
 import GraphQLHTTP from 'express-graphql';
+import { graphql, introspectionQuery } from 'graphql';
+
 import DBOps from './src/server/db/db';
+import Schema from './src/server/data/schema.js';
 
 const PORT = 3000;
 let app = express();
 
 app.use(express.static('.'));
 
-let db = null;
+let schema = null;
 
-new DBOps().getConnection((error, database) => {
-  if (error) {
-    throw error;
-  }
+(async () => {
+  let db = await new DBOps().getConnection();
 
-  db = database;
+  schema = Schema(db);
   app.use('/graphql', GraphQLHTTP({
-    schema: schema(db),
+    schema,
+    // enabling the graphiql interface (an IDE to run, test, introspect GraphQL queries)
     graphiql: true
   }));
 
-  app.listen(PORT, () => {
-      console.log(`Listening on port ${PORT}`);
+  let schemaJSON = await graphql(schema, introspectionQuery);
+
+  fs.writeFile('./src/server/data/schema.json', JSON.stringify(schemaJSON, null, 2), err => {
+    if (err) {
+      throw err;
+    }
+    console.log('successfully created schema');
   });
-});
+
+  app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+  });
+})();
