@@ -10,6 +10,7 @@ import {
 import {
   connectionDefinitions,
   connectionArgs,
+  mutationWithClientMutationId,
   connectionFromPromisedArray
 } from 'graphql-relay';
 
@@ -59,14 +60,53 @@ module.exports = (db) => {
     })
   });
 
+  let CustomGraphQLCreateStoryMutation = mutationWithClientMutationId({
+    name: 'CreateStory',
+    inputFields: {
+      author: { type: new GraphQLNonNull(GraphQLString) },
+      title: { type: new GraphQLNonNull(GraphQLString) },
+      duration: { type: new GraphQLNonNull(GraphQLString) },
+      genre: { type: new GraphQLNonNull(GraphQLString) },
+      tags: { type: new GraphQLNonNull(new GraphQLList(GraphQLString)) },
+      story: { type: new GraphQLNonNull(GraphQLString) }
+    },
+
+    outputFields: {
+      story: {
+        type: CustomGraphQLStoryType,
+        resolve: (object) => object.ops[0]
+      }
+    },
+
+    mutateAndGetPayload: ({ author, title, duration, genre, tags, story }) => {
+      return db.collection(COLLECTOION_NAME).insertOne({
+        author,
+        title,
+        duration,
+        genre,
+        tags,
+        story,
+        stars: 0,
+        timesRead: 0
+      });
+    }
+  });
+
   let schema = new GraphQLSchema({
     query: new GraphQLObjectType({
       name: 'Query',
-      fields: () =>({
+      fields: () => ({
         store: {
           type: CustomGraphQLStoreType,
           resolve: () => store
         }
+      })
+    }),
+
+    mutation: new GraphQLObjectType({
+      name: 'Mutation',
+      fields: () => ({
+        createStory: CustomGraphQLCreateStoryMutation
       })
     })
   });
