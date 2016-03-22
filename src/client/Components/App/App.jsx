@@ -31,7 +31,7 @@ App = Relay.createContainer(App, {
   fragments: {
     store: () => Relay.QL`
       fragment on Store {
-        storyConnection(last: $limit) {
+        storyConnection(first: $limit) {
           edges {
             node {
               id,
