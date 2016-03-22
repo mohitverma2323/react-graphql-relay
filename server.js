@@ -12,13 +12,11 @@ let app = express();
 
 app.use(express.static('.'));
 
-let schema = null;
-
 (async () => {
   try {
     let db = await new DBOps().getConnection();
+    let schema = Schema(db);
 
-    schema = Schema(db);
     app.use('/graphql', GraphQLHTTP({
       schema,
       // enabling the graphiql interface (an IDE to run, test, introspect GraphQL queries)

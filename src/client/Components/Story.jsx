@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Card, CardTitle, CardText } from 'material-ui';
 import Relay from 'react-relay';
 
 class Story extends React.Component {
@@ -9,16 +10,18 @@ class Story extends React.Component {
 
   render() {
     let { story } = this.props;
+    let storyMarkup = story.story.split('\n').map((line, index) => <p key={index}>{line}</p>);
 
     return (
       <div className='container'>
-        <div className='span12'>
-          <h2>{story.title}</h2>
-          <p>{story.story}</p>
-          <p className='text-right'>
-            <i>{`-- A shot by ${story.author}`}</i>
-          </p>
-        </div>
+        <br />
+        <Card className='span12'>
+          <CardTitle
+            subtitle={ `by ${story.author}`}
+            title={story.title} />
+          <CardText> { storyMarkup } </CardText>
+        </Card>
+        <br />
       </div>
     );
   }

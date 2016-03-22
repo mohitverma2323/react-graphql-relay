@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
-import { AppBar } from 'material-ui';
 
 import Story from './Story';
 
@@ -19,7 +18,6 @@ class App extends React.Component {
 
     return (
       <div>
-        <AppBar title='Story-Shot' />
         { stories }
       </div>
     );
@@ -28,20 +26,20 @@ class App extends React.Component {
 
 App = Relay.createContainer(App, {
   initialVariables: {
-    limit: 3
+    limit: 1
   },
   fragments: {
     store: () => Relay.QL`
-    fragment on Store {
-      storyConnection(first: $limit) {
-        edges {
-          node {
-            id,
-            ${Story.getFragment('story')}
+      fragment on Store {
+        storyConnection(last: $limit) {
+          edges {
+            node {
+              id,
+              ${Story.getFragment('story')}
+            }
           }
         }
       }
-    }
     `
   }
 });

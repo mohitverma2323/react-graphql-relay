@@ -375,7 +375,7 @@ module.exports = {
     // Disallow undeclared variables in JSX
     'react/jsx-no-undef': 2,
     // Enforce props alphabetical sorting
-    'react/jsx-sort-props': 1,
+    'react/jsx-sort-props': 0,
     // Prevent React to be incorrectly marked as unused
     'react/jsx-uses-react': 2,
     // Prevent variables used in JSX to be incorrectly marked as unused
