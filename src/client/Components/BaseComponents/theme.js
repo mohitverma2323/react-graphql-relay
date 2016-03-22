@@ -1,6 +1,4 @@
 import MUI from 'material-ui';
-
-// Unable to get it to work it any other way
 const Colors = MUI.Styles.Colors;
 
 // import Colors from 'material-ui/lib/styles/colors';

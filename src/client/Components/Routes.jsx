@@ -2,7 +2,7 @@ import React from 'react';
 import Relay from 'react-relay';
 import { Route, IndexRoute } from 'react-router';
 
-import Main from './Main';
+import Main from './BaseComponents/Main';
 import Home from './Dashboard/Home';
 import About from './AboutPage/About';
 import App from './App/App';

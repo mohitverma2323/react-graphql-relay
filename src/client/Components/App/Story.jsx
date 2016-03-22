@@ -18,8 +18,9 @@ class Story extends React.Component {
         <Card className='span12'>
           <CardTitle
             subtitle={ `by ${story.author}`}
-            title={story.title} />
-          <CardText> { storyMarkup } </CardText>
+            title={story.title}
+            style={{ padding: 50, paddingBottom: 0 }} />
+          <CardText style={{ padding: 50 }}> { storyMarkup } </CardText>
         </Card>
         <br />
       </div>
