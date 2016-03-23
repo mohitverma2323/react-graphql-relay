@@ -17,6 +17,8 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
+      // using the babel-polyfill so PhantomJS recognizes Set, Map, etc.
+      'node_modules/babel-polyfill/dist/polyfill.js',
       'spec/**/*.spec.js'
     ],
 

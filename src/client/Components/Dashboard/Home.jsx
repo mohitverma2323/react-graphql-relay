@@ -1,4 +1,5 @@
 import React from 'react';
+import FAB from './FAB';
 
 export default class Home extends React.Component {
   render() {
@@ -28,7 +29,8 @@ export default class Home extends React.Component {
             </div>
           </div>
         </div>
-    </div>
+        <FAB />
+      </div>
     );
   }
 }

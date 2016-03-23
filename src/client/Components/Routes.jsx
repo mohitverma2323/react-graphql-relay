@@ -6,6 +6,7 @@ import Main from './BaseComponents/Main';
 import Home from './Dashboard/Home';
 import About from './AboutPage/About';
 import App from './App/App';
+import AddStory from './AddStory/AddStory';
 
 
 /**
@@ -32,7 +33,8 @@ const StoryQueries = {
 let routes = (
     <Route component={Main} path='/' >
       <IndexRoute component={Home} />
-      <Route component={App} path='app' queries={StoryQueries} />
+      <Route component={App} path='a-random-shot' queries={StoryQueries} />
+      <Route component={AddStory} path='add-shot' />
       <Route component={About} path='about' />
     </Route>
 );
