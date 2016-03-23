@@ -58,6 +58,11 @@ module.exports = {
         include: path.join(__dirname, 'src/client')
       },
       {
+        test: /\.less$/,
+        loader: 'style-loader!css-loader!less-loader',
+        include: path.join(__dirname, 'src/client')
+      },
+      {
         test: /\.woff2?(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url?limit=10000&mimetype=application/font-woff'
       },

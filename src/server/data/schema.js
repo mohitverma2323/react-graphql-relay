@@ -8,6 +8,7 @@ import {
 } from 'graphql';
 
 import {
+  globalIdField,
   connectionDefinitions,
   connectionArgs,
   mutationWithClientMutationId,
@@ -52,6 +53,7 @@ module.exports = (db) => {
   let CustomGraphQLStoreType = new GraphQLObjectType({
     name: 'Store',
     fields: () => ({
+      id: globalIdField('Store'),
       storyConnection: {
         type: CustomGraphQLStoryConnection.connectionType,
         args: connectionArgs,
@@ -72,9 +74,13 @@ module.exports = (db) => {
     },
 
     outputFields: {
-      story: {
-        type: CustomGraphQLStoryType,
-        resolve: (object) => object.ops[0]
+      storyEdge: {
+        type: CustomGraphQLStoryConnection.edgeType,
+        resolve: (object) => ({ node: object.ops[0], cursor: object.insertedId })
+      },
+      store: {
+        type: CustomGraphQLStoreType,
+        resolve: () => store
       }
     },
 

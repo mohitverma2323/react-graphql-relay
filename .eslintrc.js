@@ -245,7 +245,7 @@ module.exports = {
     // this option sets a specific tab width for your code (off by default)
     indent: [ 1, 2, { "SwitchCase": 1 } ],
     // enforce one true brace style (off by default)
-    'brace-style': 1,
+    'brace-style': 0,
     // require camel case names
     camelcase: 1,
     // enforce spacing before and after comma
@@ -275,7 +275,7 @@ module.exports = {
     // disallow use of the Array constructor
     'no-array-constructor': 1,
     // disallow comments inline after code (off by default)
-    'no-inline-comments': 1,
+    'no-inline-comments': 0,
     // disallow if as the only statement in an else block (off by default)
     'no-lonely-if': 1,
     // disallow mixed spaces and tabs for indentation
