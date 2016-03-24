@@ -34,7 +34,7 @@ let routes = (
     <Route component={Main} path='/' >
       <IndexRoute component={Home} />
       <Route component={App} path='a-random-shot' queries={StoryQueries} />
-      <Route component={AddStory} path='add-shot' />
+      <Route component={AddStory} path='add-shot' queries={StoryQueries} />
       <Route component={About} path='about' />
     </Route>
 );

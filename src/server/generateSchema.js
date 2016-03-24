@@ -5,8 +5,7 @@ import { graphql, introspectionQuery } from 'graphql';
 import DBOps from './db/db';
 import Schema from './data/schema.js';
 
-/** Generates the schema required by relay (needs to run if there is a change to schema) */
-(async () => {
+let schemaGenerator = async () => {
   try {
     let db = await new DBOps().getConnection();
     let schema = Schema(db);
@@ -22,4 +21,6 @@ import Schema from './data/schema.js';
   } catch (exception) {
     console.log(exception);
   }
-})();
+};
+
+export default schemaGenerator;

@@ -7,13 +7,7 @@ import {
   GraphQLNonNull
 } from 'graphql';
 
-import {
-  globalIdField,
-  connectionDefinitions,
-  connectionArgs,
-  mutationWithClientMutationId,
-  connectionFromPromisedArray
-} from 'graphql-relay';
+import { globalIdField, connectionArgs, mutationWithClientMutationId } from 'graphql-relay';
 
 import { COLLECTOION_NAME } from '../../Constants';
 
@@ -25,6 +19,7 @@ import { COLLECTOION_NAME } from '../../Constants';
  */
 module.exports = (db) => {
   let store = {};
+
   /**
    * A custom GraphQLObjectType representing the link data type
    */
@@ -45,19 +40,25 @@ module.exports = (db) => {
     })
   });
 
-  let CustomGraphQLStoryConnection = connectionDefinitions({
-    name: 'Story',
-    nodeType: CustomGraphQLStoryType
-  });
-
   let CustomGraphQLStoreType = new GraphQLObjectType({
     name: 'Store',
     fields: () => ({
+      // relay global unique id generator
       id: globalIdField('Store'),
-      storyConnection: {
-        type: CustomGraphQLStoryConnection.connectionType,
+      story: {
+        type: CustomGraphQLStoryType,
         args: connectionArgs,
-        resolve: (_, args) => connectionFromPromisedArray(db.collection(COLLECTOION_NAME).find({}).toArray(), args)
+        resolve: async () => {
+          try {
+            let max = await db.collection(COLLECTOION_NAME).count();
+            let random = Math.floor(Math.random() * max);
+
+            // this is like linear search. Can we do better?
+            return await db.collection(COLLECTOION_NAME).find().limit(-1).skip(random).next();
+          } catch (error) {
+            throw error;
+          }
+        }
       }
     })
   });
@@ -74,9 +75,10 @@ module.exports = (db) => {
     },
 
     outputFields: {
-      storyEdge: {
-        type: CustomGraphQLStoryConnection.edgeType,
-        resolve: (object) => ({ node: object.ops[0], cursor: object.insertedId })
+      story: {
+        type: CustomGraphQLStoryType,
+        // object.ops : array of all the documents inserted.
+        resolve: (object) => object.ops[0]
       },
       store: {
         type: CustomGraphQLStoreType,

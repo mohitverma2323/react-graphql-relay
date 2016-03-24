@@ -1,112 +1,64 @@
-import React from 'react';
-// import Relay from 'react-relay';
-import { RaisedButton, MenuItem, Paper } from 'material-ui';
-import Formsy from 'formsy-react';
-import Tags from './tags';
-import { FormsySelect, FormsyText } from 'formsy-material-ui';
+import React, { PropTypes } from 'react';
+import Relay from 'react-relay';
 
-import MultiSelect from './MultiSelect';
+import MUI from 'material-ui';
+const Colors = MUI.Styles.Colors;
+
+import CreateStoryMutation from './CreateStoryMutation';
+import FormAddStory from './FormAddStory';
 
 const SHORT_LENGTH = 500;
 const LONG_LENGTH = 1000;
-const GENRES_LIST = [
-  'Comedy',
-  'Drama',
-  'Non-fiction',
-  'Realistic-fiction',
-  'Romance-novel',
-  'Satire',
-  'Tragedy',
-  'Tragicomedy',
-  'Horror'
-];
+const RIBBON_HEIGHT = 50;
 
 class AddStory extends React.Component {
-  state = { canSubmit: false };
-
-  static errorMessages = {
-    wordsError: 'Please only use letters'
-  };
-
-  componentWillMount() {
-    this.genres = GENRES_LIST.map((genre) => <MenuItem value={genre} primaryText={genre} />);
-    // let tags = Tags.map((tag) => <MenuItem value={tag} primaryText={tag} />);
-    this.tags = Tags.map((tag) => {
-      return ({ value: tag, label: tag });
-    });
+  static propTypes = {
+    store: PropTypes.object.isRequired
   }
 
-  __onSubmit__ = (model) => {
-    let duration = null;
-    if (model.story.length < SHORT_LENGTH) {
-      duration = 'short';
-    } else if (model.story.length < LONG_LENGTH) {
-      duration = 'medium';
-    } else {
-      duration = 'long';
+  __getDuration__ = (length) => {
+    if (length < SHORT_LENGTH) {
+      return 'short';
+    } else if (length < LONG_LENGTH) {
+      return 'medium';
     }
-    model.duration = duration;
-    console.log(model);
+    return 'long';
+  }
 
-    // reseting the form after a valid submission
-    this.refs.form.reset();
+  onSubmit = (model, callback) => {
+    model.duration = this.__getDuration__(model.story.length);
+    model.store = this.props.store;
+    Relay.Store.update(new CreateStoryMutation(model));
+    callback();
   };
 
   render() {
-    let genres = GENRES_LIST.map((genre) => <MenuItem value={genre} primaryText={genre} />);
     return (
-      <div className='container text-center' style={{ marginTop: 50, marginBottom: 50 }}>
-        <Paper className='text-center' style={{ width: 400, padding: 50, margin: 'auto' }}>
-          <h2>Add a shot to our library</h2>
-
-          <Formsy.Form
-            ref='form'
-            onValid={ () => { this.setState({ canSubmit: true }); }}
-            onInvalid={ () => { this.setState({ canSubmit: false }); }}
-            onValidSubmit={ this.__onSubmit__ }
-          >
-
-            <FormsyText name='title' required floatingLabelText='Title' hintText='What is the title?' />
-            <br />
-            <FormsyText name='author' required floatingLabelText='Author' hintText='Name of the author?' />
-            <br style={{ marginTop: 20, marginBottom: 20 }}/>
-
-            {/* MenuItem's from an array of values */}
-            <FormsySelect name='genre' required floatingLabelText={'What\'s the type?'}>
-              { genres }
-            </FormsySelect>
-            <br />
-
-            <MultiSelect
-              id='tags' name='tags' title='Tags'
-              options={this.tags}
-              required
-            />
-            <br style={{ marginTop: 20, marginBottom: 20 }}/>
-
-            <FormsyText name='story' required
-              floatingLabelText='Story'
-              hintText='The entire story'
-              multiLine={true} rows={3} rowsMax={50}
-            /> <br />
-
-            <RaisedButton type='submit' label='Submit' disabled={!this.state.canSubmit} style={{ marginTop: 50 }}/>
-          </Formsy.Form>
-
-        </Paper>
+      <div className='text-center'>
+        <div style={{
+          width: '100%',
+          height: RIBBON_HEIGHT + 'vh',
+          backgroundColor: Colors.blue700,
+          WebkitFlexShrink: '0',
+          MsFlexNegative: '0',
+          flexShrink: '0'
+        }}></div>
+        <div style={{ marginTop: -(RIBBON_HEIGHT - 10) + 'vh' }}>
+          <FormAddStory onSubmit={this.onSubmit} />
+        </div>
       </div>
     );
   }
 }
 
-//
-// AddStory = Relay.createContainer(AddStory, {
-//   fragments: {
-//     AddStory: () => Relay.QL`
-//       fragment on  {
-//       }
-//     `
-//   }
-// });
-//
+AddStory = Relay.createContainer(AddStory, {
+  fragments: {
+    store: () => Relay.QL`
+      fragment on Store {
+        id
+      }
+    `
+  }
+});
+
 export default AddStory;

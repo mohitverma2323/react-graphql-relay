@@ -18,12 +18,10 @@ class App extends React.Component {
   };
 
   render() {
-    let stories = this.props.store.storyConnection.edges.map(edge =>
-      <Story key={edge.node.id} story={edge.node} />
-    );
+    let story = this.props.store.story;
 
     return (
-      <div>
+      <div style={{ marginBottom: 50 }}>
         <div style={{
           width: '100%',
           height: RIBBON_HEIGHT + 'vh',
@@ -33,7 +31,7 @@ class App extends React.Component {
           flexShrink: '0'
         }}></div>
       <div style={{ marginTop: -(RIBBON_HEIGHT - 10) + 'vh' }}>
-          { stories }
+        <Story key={story.id} story={story} />
         </div>
       </div>
     );
@@ -41,19 +39,13 @@ class App extends React.Component {
 }
 
 App = Relay.createContainer(App, {
-  initialVariables: {
-    limit: 1
-  },
   fragments: {
     store: () => Relay.QL`
       fragment on Store {
-        storyConnection(last: $limit) {
-          edges {
-            node {
-              id,
-              ${Story.getFragment('story')}
-            }
-          }
+        id,
+        story {
+          id,
+          ${Story.getFragment('story')}
         }
       }
     `

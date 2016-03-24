@@ -4,6 +4,7 @@ import GraphQLHTTP from 'express-graphql';
 
 import DBOps from './src/server/db/db';
 import Schema from './src/server/data/schema.js';
+import schemaGenerator from './src/server/generateSchema';
 
 const PORT = 3000;
 let app = express();
@@ -14,6 +15,7 @@ app.use(express.static('.'));
   try {
     let db = await new DBOps().getConnection();
     let schema = Schema(db);
+    schemaGenerator();
 
     app.use('/graphql', GraphQLHTTP({
       schema,
