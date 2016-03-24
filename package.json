@@ -5,6 +5,7 @@
   "scripts": {
     "start": "./node_modules/.bin/nodemon server.js --exec babel-node --ignore src/server/data/schema.json",
     "ui_start": "./node_modules/.bin/webpack -wd",
+    "only_ui": "node webpack-dev-server.js",
     "test": "./node_modules/.bin/karma start --single-run --no-auto-watch karma.conf.js",
     "test_watch": "./node_modules/.bin/karma start --auto-watch --no-single-run karma.conf.js",
     "lint": "./node_modules/.bin/eslint .",
