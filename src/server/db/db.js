@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const MONGO_URL = 'mongodb://shinigami:shinigami@ds019708.mlab.com:19708/ddrgrappdb';
+const MONGO_URL = 'mongodb://localhost/storyshotdb';
 
 /**
  * This class takes care of the connection to the database.
