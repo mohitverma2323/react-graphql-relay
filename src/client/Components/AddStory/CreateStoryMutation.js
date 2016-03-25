@@ -1,7 +1,8 @@
 import Relay from 'react-relay';
 
 class CreateStoryMutation extends Relay.Mutation {
-  // GraphQL operation for the mutation
+  // This method returns a GraphQL operation that represents the mutation to be performed.
+  // This presumes that the server implements a mutation type named ‘createStory’
   getMutation() {
     return Relay.QL`
       mutation {
@@ -10,8 +11,8 @@ class CreateStoryMutation extends Relay.Mutation {
     `;
   }
 
-  // preping up the variables required for the mutation
-  // all the values available in the props object
+  // This method to prepares the variables that will be used as input to the mutation.
+  // Our ‘createStory’ mutation takes exactly six variables as input.
   getVariables() {
     return {
       title: this.props.title,
@@ -23,8 +24,9 @@ class CreateStoryMutation extends Relay.Mutation {
     };
   }
 
-  // Everything in the data model that could be affected by running the mutation.
-  // Relay intersects the actual data with it and only askes for that.
+  // This method designs a ‘fat query’ – one that represents every field in our data model that could change as a
+  // result of this mutation. Relay will intersect this query with a ‘tracked query’ that represents the data that our
+  // application actually uses, and instruct the server to include only those fields in its response.
   getFatQuery() {
     return Relay.QL`
       fragment on CreateStoryPayload {
@@ -35,7 +37,7 @@ class CreateStoryMutation extends Relay.Mutation {
     `;
   }
 
-  // An array of configurations.
+  // These configurations advise Relay on how to handle the createStoryPayload returned by the server.
   getConfigs() {
     return [ ];
   }

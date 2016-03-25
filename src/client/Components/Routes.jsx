@@ -8,9 +8,14 @@ import About from './AboutPage/About';
 import App from './App/App';
 import AddStory from './AddStory/AddStory';
 
+// Since Relay containers define fragments and not queries, they can be easily embedded in multiple contexts.
+// Like React components, Relay containers are highly reusable.
+// Routes are objects that define a set of root queries and input parameters
+// Therefor we require this top level query
 
 /**
- * Top level query information for the App component
+ * Top level query information for the App component as well as the AddStory component
+ * (Sholud change in the near future).
  * @type {Object}
  */
 const StoryQueries = {

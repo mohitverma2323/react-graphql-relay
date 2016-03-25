@@ -1,6 +1,9 @@
 import React from 'react';
 import { Card, CardTitle, CardText, CardMedia } from 'material-ui';
 
+/**
+ * Just a about us page
+ */
 export default class About extends React.Component {
 
   render() {

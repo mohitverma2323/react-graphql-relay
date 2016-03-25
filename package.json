@@ -4,6 +4,7 @@
   "description": "A sample project using react, graphQL, realay, flux, node, express, webpack, es6/7. Oh and it's a data driven app.",
   "scripts": {
     "start": "./node_modules/.bin/nodemon server.js --exec babel-node --ignore src/server/data/schema.json",
+    "start_no_watch": "babel-node server.js",
     "ui_start": "./node_modules/.bin/webpack -wd",
     "only_ui": "node webpack-dev-server.js",
     "test": "./node_modules/.bin/karma start --single-run --no-auto-watch karma.conf.js",

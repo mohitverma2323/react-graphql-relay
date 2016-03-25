@@ -18,13 +18,13 @@ const GENRES_LIST = [
   'Horror'
 ];
 
+// Just a form to add a new story (contaions mostly the maekup with little logic)
 export default class FormAddAtory extends React.Component {
 
   state = { canSubmit: false };
 
   componentWillMount() {
     this.genres = GENRES_LIST.map((genre) => <MenuItem value={genre} primaryText={genre} />);
-    // let tags = Tags.map((tag) => <MenuItem value={tag} primaryText={tag} />);
     this.tags = Tags.map((tag) => {
       return ({ value: tag, label: tag });
     });
@@ -34,14 +34,7 @@ export default class FormAddAtory extends React.Component {
     onSubmit: PropTypes.func.isRequired
   };
 
-  __onSubmit__ = (model) => {
-    this.props.onSubmit(model, () => { this.refs.form.reset(); });
-    // reseting the form after a valid submission
-    // this.refs.form.reset();
-  };
-
   render() {
-    let genres = GENRES_LIST.map((genre) => <MenuItem value={genre} primaryText={genre} />);
     return (
         <Paper className='text-center' style={{ width: 400, padding: 50, margin: 'auto' }}>
           <h2>Add a shot to our library</h2>
@@ -50,7 +43,7 @@ export default class FormAddAtory extends React.Component {
             ref='form'
             onValid={ () => { this.setState({ canSubmit: true }); }}
             onInvalid={ () => { this.setState({ canSubmit: false }); }}
-            onValidSubmit={ this.props.onSubmit }
+            onValidSubmit={ (model) => { this.props.onSubmit(model, () => { this.refs.form.reset(); }); } }
           >
 
             <FormsyText name='title' required floatingLabelText='Title' hintText='What is the title?' />
@@ -60,7 +53,7 @@ export default class FormAddAtory extends React.Component {
 
             {/* MenuItem's from an array of values */}
             <FormsySelect name='genre' required floatingLabelText={'What\'s the type?'}>
-              { genres }
+              { this.genres }
             </FormsySelect>
             <br />
 

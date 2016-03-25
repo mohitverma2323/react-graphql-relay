@@ -1,3 +1,9 @@
+/**
+ * List of tags for a story.
+ * @type {Array}
+ */
+// Should be more like a Map of Set(s) that returns a valid list/set of tags
+// that a story can take on depending on the genre.
 module.exports = [
   'Biography',
   'Memoir',

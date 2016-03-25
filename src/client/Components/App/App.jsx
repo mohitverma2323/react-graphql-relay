@@ -4,14 +4,11 @@ import Relay from 'react-relay';
 import MUI from 'material-ui';
 const Colors = MUI.Styles.Colors;
 
-
 import Story from './Story';
 
 const RIBBON_HEIGHT = 50;
 
-/**
- * This class renders a div that has Hello World!! as it's text content
- */
+// Just displays a 'Paper' with a story on it
 class App extends React.Component {
   static propTypes = {
     store: PropTypes.object.isRequired
@@ -39,6 +36,8 @@ class App extends React.Component {
 }
 
 App = Relay.createContainer(App, {
+  // For each of the props that depend on server data, we define a corresponding
+  // key in `fragments`
   fragments: {
     store: () => Relay.QL`
       fragment on Store {
