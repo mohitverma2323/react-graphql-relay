@@ -1,14 +1,10 @@
 /**
- * All the constants used throughout the project
+ * All the constants used throughout the project front and back end.
  * @type {Object}
  */
 
 
 module.exports = {
-  Actions: {
-    RECIEVE_LINKS: 'RECIEVE_LINKS'
-  },
   COLLECTOION_NAME: 'test',
-  GET_LINKS: '/get/links',
   GRPAHQL: '/graphql'
 };

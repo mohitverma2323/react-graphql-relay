@@ -21,7 +21,7 @@ module.exports = (db) => {
   let store = {};
 
   /**
-   * A custom GraphQLObjectType representing the link data type
+   * A custom GraphQLObjectType representing the Story data type
    */
   let CustomGraphQLStoryType = new GraphQLObjectType({
     name: 'Story',
@@ -31,6 +31,7 @@ module.exports = (db) => {
         type: new GraphQLNonNull(GraphQLID),
         resolve: (object) => object._id
       },
+      // all the fields seem self-descriptive default reslotion will happen here
       author: { type: GraphQLString },
       title: { type: GraphQLString },
       duration: { type: GraphQLString },
@@ -40,19 +41,28 @@ module.exports = (db) => {
     })
   });
 
+  /**
+   * A custom GraphQLObjectType. It's like a collection of CustomGraphQLStoryType.
+   */
   let CustomGraphQLStoreType = new GraphQLObjectType({
     name: 'Store',
     fields: () => ({
-      // relay global unique id generator
+      // relay global unique id generator helper to well generate unique global id's
       id: globalIdField('Store'),
       story: {
         type: CustomGraphQLStoryType,
+        // hmmm ?
         args: connectionArgs,
+        // how to resolve a query to fetch a story
+        // any custom js code can be shoved here
         resolve: async () => {
           try {
+            // The following logic is to get a random document from the mongodb.
+            // getting the count then generating a random number in the range
             let max = await db.collection(COLLECTOION_NAME).count();
             let random = Math.floor(Math.random() * max);
 
+            // getting the document at position $random
             // this is like linear search. Can we do better?
             return await db.collection(COLLECTOION_NAME).find().limit(-1).skip(random).next();
           } catch (error) {
@@ -63,8 +73,13 @@ module.exports = (db) => {
     })
   });
 
+  /**
+   * Relay compatible mutation object. (Relay mutations only allow single input field therefore they
+   * have unique ids)
+   */
   let CustomGraphQLCreateStoryMutation = mutationWithClientMutationId({
     name: 'CreateStory',
+    // input to mutateAndGetPayload. Values expected from the client.
     inputFields: {
       author: { type: new GraphQLNonNull(GraphQLString) },
       title: { type: new GraphQLNonNull(GraphQLString) },
@@ -74,6 +89,8 @@ module.exports = (db) => {
       story: { type: new GraphQLNonNull(GraphQLString) }
     },
 
+    // the query to run after the mutation is done with. Can be arbitrary and not just bound by
+    // the mutation that just took place.
     outputFields: {
       story: {
         type: CustomGraphQLStoryType,
@@ -86,6 +103,8 @@ module.exports = (db) => {
       }
     },
 
+    // mutation logic goes here(any arbitrary logic)
+    // notice the return is a promise (relay nativly supports it. COOL huh)
     mutateAndGetPayload: ({ author, title, duration, genre, tags, story }) => {
       return db.collection(COLLECTOION_NAME).insertOne({
         author,
@@ -100,7 +119,10 @@ module.exports = (db) => {
     }
   });
 
+  // The schema for our app it's like the topmost level will have two keys/attrs/fields/whatever
+  // 1. query 2. mutation
   let schema = new GraphQLSchema({
+    // wrapper for all the queries
     query: new GraphQLObjectType({
       name: 'Query',
       fields: () => ({
@@ -111,6 +133,7 @@ module.exports = (db) => {
       })
     }),
 
+    // wrapper for all the mutations
     mutation: new GraphQLObjectType({
       name: 'Mutation',
       fields: () => ({

@@ -17,6 +17,7 @@ export default class DatabaseOperations {
    * @param  {Function} callback [the callback which will be called after the call to the db]
    * @return {null}            [null]
    */
+  // something like the singleton design pattern
   async getConnection() {
     if (this.db) {
       return this.db;
